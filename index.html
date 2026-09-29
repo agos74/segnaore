@@ -77,6 +77,30 @@
     summary { font-weight: 700; cursor: pointer; min-height: 44px; }
     footer { max-width: 720px; margin: 0 auto; padding: 0 20px 48px; opacity: 0.9; font-size: 0.95rem; }
     a { overflow-wrap: anywhere; }
+    .shot {
+      padding: 0; border: 1px solid rgba(127,127,127,.35); border-radius: 12px;
+      background: none; cursor: zoom-in; flex-shrink: 0; line-height: 0;
+    }
+    .shot img { border: 0; }
+    .shot:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    #lightbox[hidden] { display: none; }
+    #lightbox {
+      position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.88); padding: 16px;
+    }
+    #lightbox img {
+      max-width: min(92vw, 480px); max-height: 82vh; width: auto; height: auto;
+      border-radius: 16px; background: #fff;
+    }
+    #lightbox button {
+      position: absolute; min-width: 44px; min-height: 44px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.12);
+      color: #fff; font-size: 1.2rem; cursor: pointer;
+    }
+    #lb-close { top: 12px; right: 12px; }
+    #lb-prev { left: 8px; top: 50%; transform: translateY(-50%); }
+    #lb-next { right: 8px; top: 50%; transform: translateY(-50%); }
+    #lb-cap { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; color: #fff; font-size: .9rem; opacity: .9; }
   </style>
 </head>
 <body>
@@ -97,7 +121,7 @@
   <h2>Cosa puoi fare</h2>
 
   <div class="feature">
-    <img src="img/01-home.png" alt="Schermata home con totali ore" loading="lazy" width="120">
+    <button type="button" class="shot" data-i="0" aria-label="Ingrandisci schermata"><img src="img/01-home.png" alt="Schermata home con totali ore" loading="lazy" width="120"></button>
     <div>
       <h3>Tieni sotto controllo le tue ore</h3>
       <p>Totali e straordinari sempre aggiornati, mese per mese, per chi lavora su turni, con orari spezzati o contratti flessibili.</p>
@@ -105,7 +129,7 @@
   </div>
 
   <div class="feature">
-    <img src="img/02-giornata.png" alt="Inserimento giornata con fasce orarie" loading="lazy" width="120">
+    <button type="button" class="shot" data-i="1" aria-label="Ingrandisci schermata"><img src="img/02-giornata.png" alt="Inserimento giornata con fasce orarie" loading="lazy" width="120"></button>
     <div>
       <h3>Calcola le ore senza fare conti</h3>
       <p>Doppia fascia oraria e pausa, anche oltre la mezzanotte, con compilazione guidata e suggerimento intelligente dell'ultimo orario (Smart Fill). Incluso il giorno di recupero per i turni spostati.</p>
@@ -113,7 +137,7 @@
   </div>
 
   <div class="feature">
-    <img src="img/03-mese.png" alt="Registro mensile con straordinari e notti" loading="lazy" width="120">
+    <button type="button" class="shot" data-i="2" aria-label="Ingrandisci schermata"><img src="img/03-mese.png" alt="Registro mensile con straordinari e notti" loading="lazy" width="120"></button>
     <div>
       <h3>Straordinari e notti, voce per voce</h3>
       <p>Ore ordinarie, straordinari diurni e notturni (fascia 22:00–06:00 modificabile), straordinario settimanale, ferie, permessi, malattia e festività.</p>
@@ -121,7 +145,7 @@
   </div>
 
   <div class="feature">
-    <img src="img/04-confronto.png" alt="Confronto ore con la busta paga" loading="lazy" width="120">
+    <button type="button" class="shot" data-i="3" aria-label="Ingrandisci schermata"><img src="img/04-confronto.png" alt="Confronto ore con la busta paga" loading="lazy" width="120"></button>
     <div>
       <h3>Le ore segnate contro il cedolino</h3>
       <p>Inserisci le ore della busta paga e scopri subito eventuali differenze (tolleranza 0,25 h sugli arrotondamenti). L'app confronta ore, non stipendi.</p>
@@ -129,7 +153,7 @@
   </div>
 
   <div class="feature">
-    <img src="img/05-bancaore.png" alt="Banca ore con saldo e movimenti" loading="lazy" width="120">
+    <button type="button" class="shot" data-i="4" aria-label="Ingrandisci schermata"><img src="img/05-bancaore.png" alt="Banca ore con saldo e movimenti" loading="lazy" width="120"></button>
     <div>
       <h3>Banca ore e riposi compensativi</h3>
       <p>Accantona gli straordinari e usali come riposi, anche parziali. Ciclo personalizzabile. 5 movimenti di prova inclusi.</p>
@@ -196,6 +220,61 @@
   <p>© Agostino Coppolino — Segna Ore, l'app-foglio presenze sempre in tasca.</p>
   <p>Disponibile per Android e iPhone.</p>
 </footer>
+<div id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Schermata ingrandita">
+  <button type="button" id="lb-close" aria-label="Chiudi">✕</button>
+  <button type="button" id="lb-prev" aria-label="Schermata precedente">‹</button>
+  <img id="lb-img" src="img/01-home.png" alt="">
+  <button type="button" id="lb-next" aria-label="Schermata successiva">›</button>
+  <p id="lb-cap"></p>
+</div>
+<script>
+(function () {
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.feature .shot img'));
+  var box = document.getElementById('lightbox');
+  var img = document.getElementById('lb-img');
+  var cap = document.getElementById('lb-cap');
+  var idx = 0, lastFocus = null, touchX = null;
+  function show(i) {
+    idx = (i + shots.length) % shots.length;
+    img.src = shots[idx].src;
+    img.alt = shots[idx].alt;
+    cap.textContent = (idx + 1) + ' / ' + shots.length + ' — ' + shots[idx].alt;
+  }
+  function open(i) {
+    lastFocus = document.activeElement;
+    show(i);
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-close').focus();
+  }
+  function close() {
+    box.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  shots.forEach(function (el, i) {
+    el.closest('.shot').addEventListener('click', function () { open(i); });
+  });
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', function (e) { e.stopPropagation(); show(idx - 1); });
+  document.getElementById('lb-next').addEventListener('click', function (e) { e.stopPropagation(); show(idx + 1); });
+  box.addEventListener('click', function (e) { if (e.target === box) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (box.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
+  box.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (dx > 48) show(idx - 1);
+    else if (dx < -48) show(idx + 1);
+    touchX = null;
+  }, { passive: true });
+})();
+</script>
 
 </body>
 </html>
