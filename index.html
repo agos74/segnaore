@@ -51,6 +51,7 @@
       .store-btns { flex-direction: column; align-items: center; }
       .feature { flex-direction: column; }
       .feature img { width: 180px; aspect-ratio: 1 / 2; }
+      .feature-icon { width: 180px; min-height: 120px; }
     }
     main { max-width: 720px; margin: 0 auto; padding: 20px 20px 64px; }
     h2 { font-size: 1.3rem; margin-top: 1.8em; margin-bottom: 0.4em; }
@@ -58,6 +59,13 @@
     .feature { display: flex; gap: 16px; align-items: flex-start; margin: 20px 0; }
     .feature img {
       width: 120px; height: auto; aspect-ratio: 1 / 2; border-radius: 12px; flex-shrink: 0;
+      border: 1px solid rgba(127,127,127,.35);
+    }
+    .feature-icon {
+      width: 120px; min-height: 120px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; border-radius: 12px;
+      background: var(--navy); color: #fff;
       border: 1px solid rgba(127,127,127,.35);
     }
     .feature h3 { margin: 0 0 4px; font-size: 1.05rem; color: #4ADE80; }
@@ -100,7 +108,7 @@
     <img src="img/02-giornata.png" alt="Inserimento giornata con fasce orarie" loading="lazy" width="120">
     <div>
       <h3>Calcola le ore senza fare conti</h3>
-      <p>Doppia fascia oraria e pausa, anche oltre la mezzanotte, con compilazione guidata e suggerimento intelligente dell'ultimo orario (Smart Fill).</p>
+      <p>Doppia fascia oraria e pausa, anche oltre la mezzanotte, con compilazione guidata e suggerimento intelligente dell'ultimo orario (Smart Fill). Incluso il giorno di recupero per i turni spostati.</p>
     </div>
   </div>
 
@@ -120,6 +128,14 @@
     </div>
   </div>
 
+  <div class="feature">
+    <img src="img/05-bancaore.png" alt="Banca ore con saldo e movimenti" loading="lazy" width="120">
+    <div>
+      <h3>Banca ore e riposi compensativi</h3>
+      <p>Accantona gli straordinari e usali come riposi, anche parziali. Ciclo personalizzabile. 5 movimenti di prova inclusi.</p>
+    </div>
+  </div>
+
   <div class="cta-repeat">
     <h2>Prova Segna Ore gratis</h2>
     <div class="store-btns">
@@ -132,9 +148,10 @@
   <div class="pro">
     <ul>
       <li>Niente pubblicità.</li>
-      <li>Confronto dettagliato a 10 voci tra ore segnate e busta paga (straordinari, notte, ferie, permessi, malattia, festività).</li>
+      <li>Confronto dettagliato a 14 voci tra ore segnate e busta paga (straordinari, notte, ferie, permessi, malattia, festività).</li>
       <li>Riepilogo su qualsiasi periodo personalizzato.</li>
       <li>Export di un riepilogo da condividere con sindacati, CAF o responsabili.</li>
+      <li>Banca ore e riposi compensativi illimitati, con estratto conto da condividere.</li>
     </ul>
   </div>
 
@@ -147,7 +164,17 @@
 
   <details>
     <summary>Come funziona il confronto con la busta paga?</summary>
-    <p>A fine mese inserisci le ore ordinarie riportate sul cedolino: l'app le confronta con quelle registrate. Differenze entro 0,25 ore sono considerate verificato (OK), oltre scatta la segnalazione di discrepanza. Il confronto gratuito copre le ore ordinarie; la tabella completa a 10 voci è Pro.</p>
+    <p>A fine mese inserisci le ore ordinarie riportate sul cedolino: l'app le confronta con quelle registrate. Differenze entro 0,25 ore sono considerate verificato (OK), oltre scatta la segnalazione di discrepanza. Il confronto gratuito copre le ore ordinarie; la tabella completa a 14 voci è Pro.</p>
+  </details>
+
+  <details>
+    <summary>Come funziona il giorno di recupero?</summary>
+    <p>Attiva “Giorno di recupero” nella giornata lavorata in sostituzione di un turno perso: le ore fino all'orario contrattuale contano come ordinarie. Segna il giorno perso con il giustificativo “Debito da recuperare”, solo informativo ed escluso dai totali.</p>
+  </details>
+
+  <details>
+    <summary>Come funziona la banca ore?</summary>
+    <p>Quando fai straordinario, scegli “Accantona” per metterlo da parte invece di fartelo pagare. Quando ti serve un riposo, usa il giustificativo “Riposo compensativo”, anche parziale. Si attiva dalle Impostazioni, con 5 movimenti di prova gratuita.</p>
   </details>
 
   <details>
@@ -157,7 +184,7 @@
 
   <details>
     <summary>Quanto costa?</summary>
-    <p>Il flusso ore completo è gratis per sempre. Segna Ore Pro è un acquisto unico (niente abbonamento) che rimuove la pubblicità e sblocca confronto dettagliato, export e periodo personalizzato.</p>
+    <p>Il flusso ore completo è gratis per sempre, con 5 movimenti di prova per la banca ore. Segna Ore Pro è un acquisto unico (niente abbonamento) che rimuove la pubblicità e sblocca confronto dettagliato, export, periodo personalizzato e banca ore illimitata.</p>
   </details>
 </main>
 
