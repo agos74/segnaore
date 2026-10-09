@@ -3,6 +3,8 @@ name: Archivia statistiche traffico
 # Fotografa le API Traffico di GitHub (visite, referrer, pagine) e le
 # accoda in stats/ nel repo. Nessuna terza parte, nessun cookie.
 # Le API coprono solo gli ultimi 14 giorni: il giro settimanale basta.
+# Nota: le API Traffico rifiutano il GITHUB_TOKEN automatico (403), serve
+# un PAT personale salvato nel secret TRAFFIC_TOKEN (scope public_repo).
 
 on:
   schedule:
@@ -18,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Archivia traffico
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: python3 .github/scripts/archive_traffic.py
       - name: Commit se cambiato
